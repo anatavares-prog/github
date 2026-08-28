@@ -1,14 +1,743 @@
+Claro. Abaixo está um CriminalBlog completo, sem fotos externas, com visual inspirado em investigação criminal, perícia forense, evidências, laboratório e cenas de investigação. Você pode copiar tudo para um arquivo index.html e abrir no VS Code/navegador.
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog</title>
+
+    <title>CriminalBlog | Perícia Criminal</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #0a0a0a;
+            color: #e8e8e8;
+            line-height: 1.6;
+        }
+
+        /* CABEÇALHO */
+        header {
+            min-height: 90vh;
+            background:
+                linear-gradient(rgba(0,0,0,.82), rgba(8,8,8,.95)),
+                radial-gradient(circle at center, #3b0000, #080808 65%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 3px solid #b30000;
+        }
+
+        .badge {
+            border: 1px solid #b30000;
+            color: #ff3b3b;
+            padding: 8px 18px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: clamp(45px, 9vw, 90px);
+            color: #fff;
+            letter-spacing: 8px;
+            text-shadow: 0 0 20px #a00000;
+        }
+
+        header h1 span {
+            color: #c90000;
+        }
+
+        header p {
+            max-width: 700px;
+            margin: 20px auto;
+            color: #bbb;
+            font-size: 18px;
+        }
+
+        .enter {
+            margin-top: 25px;
+            padding: 14px 35px;
+            color: white;
+            background: #9e0000;
+            text-decoration: none;
+            border: 1px solid #d90000;
+            transition: .3s;
+        }
+
+        .enter:hover {
+            background: #e00000;
+            box-shadow: 0 0 20px #8d0000;
+        }
+
+        /* MENU */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(8,8,8,.97);
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #ccc;
+            text-decoration: none;
+            padding: 18px 20px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: .3s;
+        }
+
+        nav a:hover {
+            color: #ff3333;
+            background: #160000;
+        }
+
+        /* CONTEÚDO */
+        main {
+            max-width: 1150px;
+            margin: auto;
+            padding: 70px 20px;
+        }
+
+        section {
+            margin-bottom: 90px;
+        }
+
+        .section-title {
+            color: #e00000;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            font-size: 38px;
+            margin-bottom: 25px;
+            color: white;
+        }
+
+        h3 {
+            color: #f1f1f1;
+            margin-bottom: 10px;
+        }
+
+        .intro {
+            color: #aaa;
+            max-width: 850px;
+            font-size: 17px;
+        }
+
+        /* CARDS */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #151515, #0d0d0d);
+            border: 1px solid #292929;
+            padding: 28px;
+            position: relative;
+            transition: .3s;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: #a90000;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            border-color: #800000;
+            box-shadow: 0 10px 30px rgba(120,0,0,.2);
+        }
+
+        .icon {
+            font-size: 35px;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* FATOS */
+        .facts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .fact {
+            background: #111;
+            border: 1px solid #292929;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .fact strong {
+            display: block;
+            color: #d40000;
+            font-size: 35px;
+            margin-bottom: 5px;
+        }
+
+        .fact span {
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        /* PROCESSO */
+        .timeline {
+            border-left: 2px solid #850000;
+            margin: 35px 0 0 15px;
+            padding-left: 35px;
+        }
+
+        .step {
+            position: relative;
+            margin-bottom: 35px;
+        }
+
+        .step::before {
+            content: "";
+            width: 12px;
+            height: 12px;
+            background: #d00000;
+            border-radius: 50%;
+            position: absolute;
+            left: -42px;
+            top: 6px;
+            box-shadow: 0 0 10px #c00000;
+        }
+
+        .step h3 {
+            color: #e00000;
+        }
+
+        .step p {
+            color: #999;
+        }
+
+        /* CASOS */
+        .case {
+            background: #101010;
+            border: 1px solid #292929;
+            margin: 20px 0;
+            padding: 30px;
+        }
+
+        .case-title {
+            color: #d60000;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .case p {
+            color: #aaa;
+        }
+
+        .warning {
+            margin-top: 15px;
+            padding: 15px;
+            background: #1b0808;
+            border-left: 3px solid #d00000;
+            color: #c9c9c9;
+            font-size: 13px;
+        }
+
+        /* TABELA */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #111;
+        }
+
+        th, td {
+            padding: 16px;
+            border: 1px solid #292929;
+            text-align: left;
+        }
+
+        th {
+            background: #720000;
+            color: white;
+        }
+
+        td {
+            color: #aaa;
+        }
+
+        /* DESTAQUE */
+        .quote {
+            margin: 50px 0;
+            padding: 35px;
+            background:
+                linear-gradient(90deg, #250000, #111);
+            border-left: 5px solid #c90000;
+            font-size: 22px;
+            font-style: italic;
+            color: #ddd;
+        }
+
+        /* RODAPÉ */
+        footer {
+            background: #050505;
+            border-top: 1px solid #292929;
+            text-align: center;
+            padding: 45px 20px;
+            color: #777;
+        }
+
+        footer strong {
+            color: #c40000;
+        }
+
+        /* RESPONSIVO */
+        @media (max-width: 600px) {
+            nav a {
+                padding: 12px 8px;
+                font-size: 11px;
+            }
+
+            header h1 {
+                letter-spacing: 4px;
+            }
+
+            h2 {
+                font-size: 30px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Meu blog tech</h1>
-    <p>Vou compartilhar conhecimentos sobre perita criminal</p>
-    <h2>Meu primeiro post</h2>
-    <p>Boas-vindas ao meu novo blog! Aqui vou compartilhar curiosidades da área de perita criminal </p>
-    </body>
+
+    <!-- CAPA -->
+    <header id="inicio">
+        <div class="badge">Arquivo • Investigação • Ciência</div>
+
+        <h1>CRIMINAL<span>BLOG</span></h1>
+
+        <p>
+            Um espaço dedicado à perícia criminal, ciência forense,
+            investigação e às técnicas utilizadas na análise de vestígios.
+        </p>
+
+        <a href="#pericia" class="enter">ENTRAR NO ARQUIVO</a>
+    </header>
+
+    <!-- MENU -->
+    <nav>
+        <a href="#pericia">Perícia</a>
+        <a href="#areas">Áreas</a>
+        <a href="#processo">Processo</a>
+        <a href="#casos">Casos</a>
+        <a href="#perfil">Perfil</a>
+        <a href="#curiosidades">Curiosidades</a>
+    </nav>
+
+    <main>
+
+        <!-- INTRODUÇÃO -->
+        <section id="pericia">
+            <div class="section-title">01 // O QUE É?</div>
+
+            <h2>Perícia Criminal</h2>
+
+            <p class="intro">
+                A perícia criminal é uma área técnico-científica que utiliza
+                métodos e conhecimentos especializados para analisar vestígios
+                relacionados a possíveis crimes. O trabalho pericial busca
+                transformar evidências encontradas em informações que possam
+                contribuir para a investigação e para a Justiça.
+            </p>
+
+            <div class="quote">
+                "Cada vestígio pode contar uma parte da história.
+                O trabalho da perícia é descobrir o que os vestígios revelam."
+            </div>
+        </section>
+
+        <!-- ÁREAS -->
+        <section id="areas">
+            <div class="section-title">02 // ESPECIALIZAÇÕES</div>
+
+            <h2>Áreas da Perícia</h2>
+
+            <div class="cards">
+
+                <div class="card">
+                    <div class="icon">🔬</div>
+                    <h3>Biologia Forense</h3>
+                    <p>
+                        Analisa materiais biológicos encontrados em vestígios,
+                        utilizando conhecimentos de biologia e genética.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="icon">🧬</div>
+                    <h3>Genética Forense</h3>
+                    <p>
+                        Trabalha com DNA e outros marcadores genéticos para
+                        auxiliar na identificação de pessoas e comparação de amostras.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="icon">💻</div>
+                    <h3>Computação Forense</h3>
+                    <p>
+                        Investiga dados digitais, dispositivos eletrônicos,
+                        arquivos e outros vestígios relacionados ao ambiente digital.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="icon">🧪</div>
+                    <h3>Química Forense</h3>
+                    <p>
+                        Analisa substâncias e materiais por meio de métodos
+                        laboratoriais e instrumentais.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="icon">🔎</div>
+                    <h3>Local de Crime</h3>
+                    <p>
+                        Examina o ambiente, registra vestígios e documenta
+                        informações importantes encontradas no local.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="icon">🚗</div>
+                    <h3>Perícia em Veículos</h3>
+                    <p>
+                        Pode examinar veículos, componentes e marcas relacionadas
+                        a acidentes ou investigações.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- FATOS -->
+        <section id="curiosidades">
+            <div class="section-title">03 // VOCÊ SABIA?</div>
+
+            <h2>Fatos Sobre a Área</h2>
+
+            <div class="facts">
+
+                <div class="fact">
+                    <strong>01</strong>
+                    <span>O trabalho depende de métodos científicos.</span>
+                </div>
+
+                <div class="fact">
+                    <strong>02</strong>
+                    <span>Vestígios precisam ser documentados.</span>
+                </div>
+
+                <div class="fact">
+                    <strong>03</strong>
+                    <span>A cadeia de custódia é fundamental.</span>
+                </div>
+
+                <div class="fact">
+                    <strong>04</strong>
+                    <span>Existem diversas especializações.</span>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- PROCESSO -->
+        <section id="processo">
+            <div class="section-title">04 // INVESTIGAÇÃO</div>
+
+            <h2>Como funciona uma perícia?</h2>
+
+            <div class="timeline">
+
+                <div class="step">
+                    <h3>01 — Preservação</h3>
+                    <p>
+                        O local deve ser preservado para reduzir o risco de
+                        alteração, perda ou contaminação dos vestígios.
+                    </p>
+                </div>
+
+                <div class="step">
+                    <h3>02 — Observação</h3>
+                    <p>
+                        O profissional realiza uma análise inicial do ambiente
+                        e identifica possíveis elementos relevantes.
+                    </p>
+                </div>
+
+                <div class="step">
+                    <h3>03 — Documentação</h3>
+                    <p>
+                        Informações importantes são registradas por meio de
+                        descrições, fotografias, medições e outros métodos.
+                    </p>
+                </div>
+
+                <div class="step">
+                    <h3>04 — Coleta</h3>
+                    <p>
+                        Vestígios relevantes podem ser coletados e acondicionados
+                        seguindo procedimentos apropriados.
+                    </p>
+                </div>
+
+                <div class="step">
+                    <h3>05 — Análise</h3>
+                    <p>
+                        O material pode ser encaminhado para exames técnicos
+                        e laboratoriais.
+                    </p>
+                </div>
+
+                <div class="step">
+                    <h3>06 — Laudo</h3>
+                    <p>
+                        Os resultados são organizados em um documento técnico,
+                        apresentando os exames realizados e suas conclusões.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- CASOS -->
+        <section id="casos">
+            <div class="section-title">05 // CASOS E INVESTIGAÇÕES</div>
+
+            <h2>Onde a perícia pode atuar?</h2>
+
+            <div class="case">
+                <div class="case-title">Caso 01 — Identificação por DNA</div>
+
+                <p>
+                    Em determinadas investigações, vestígios biológicos podem
+                    ser submetidos a exames genéticos. A comparação de perfis
+                    de DNA pode ajudar a estabelecer vínculos ou excluir
+                    determinadas possibilidades.
+                </p>
+
+                <div class="warning">
+                    Exemplo educativo. Um resultado pericial deve ser interpretado
+                    dentro do contexto completo da investigação.
+                </div>
+            </div>
+
+            <div class="case">
+                <div class="case-title">Caso 02 — Vestígios Digitais</div>
+
+                <p>
+                    Computadores, celulares e outros dispositivos podem conter
+                    informações relevantes para uma investigação. A computação
+                    forense busca preservar e analisar esses dados de maneira
+                    tecnicamente adequada.
+                </p>
+            </div>
+
+            <div class="case">
+                <div class="case-title">Caso 03 — Acidentes e Veículos</div>
+
+                <p>
+                    Em ocorrências envolvendo veículos, exames técnicos podem
+                    contribuir para compreender danos, marcas, posições,
+                    condições dos veículos e outros elementos relacionados
+                    ao acontecimento.
+                </p>
+            </div>
+        </section>
+
+        <!-- PERFIL -->
+        <section id="perfil">
+            <div class="section-title">06 // PROFISSÃO</div>
+
+            <h2>Características de uma Perita Criminal</h2>
+
+            <p class="intro">
+                A profissão exige uma combinação de conhecimento científico,
+                capacidade de observação, responsabilidade e atenção aos detalhes.
+            </p>
+
+            <div class="cards">
+
+                <div class="card">
+                    <h3>🧠 Raciocínio Analítico</h3>
+                    <p>
+                        Capacidade de interpretar informações e relacionar
+                        diferentes elementos de uma investigação.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>🔎 Atenção aos Detalhes</h3>
+                    <p>
+                        Pequenos vestígios podem ter importância na reconstrução
+                        de acontecimentos.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>⚖️ Imparcialidade</h3>
+                    <p>
+                        O trabalho técnico deve buscar resultados baseados
+                        nos vestígios e nos métodos científicos.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Organização</h3>
+                    <p>
+                        Registros detalhados e procedimentos padronizados
+                        são importantes para a qualidade do trabalho.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>🧪 Conhecimento Científico</h3>
+                    <p>
+                        Diferentes áreas da ciência podem ser aplicadas
+                        durante exames periciais.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>🔐 Responsabilidade</h3>
+                    <p>
+                        Evidências precisam ser tratadas com cuidado,
+                        respeitando procedimentos técnicos e legais.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- FORMAÇÃO -->
+        <section>
+            <div class="section-title">07 // FORMAÇÃO</div>
+
+            <h2>O que estudar?</h2>
+
+            <div class="table-container">
+
+                <table>
+                    <tr>
+                        <th>Área</th>
+                        <th>Conhecimentos relacionados</th>
+                    </tr>
+
+                    <tr>
+                        <td>Biologia</td>
+                        <td>Biologia molecular, genética e análise de materiais biológicos.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Química</td>
+                        <td>Química analítica, substâncias e métodos laboratoriais.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Computação</td>
+                        <td>Sistemas, dados, redes e análise de dispositivos digitais.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Física</td>
+                        <td>Movimento, energia, balística e princípios de medição.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Direito</td>
+                        <td>Procedimentos, legislação e aspectos relacionados à prova.</td>
+                    </tr>
+                </table>
+
+            </div>
+        </section>
+
+        <!-- CONCLUSÃO -->
+        <section>
+            <div class="section-title">08 // ARQUIVO FINAL</div>
+
+            <h2>Ciência por trás da investigação</h2>
+
+            <p class="intro">
+                A perícia criminal reúne diferentes áreas do conhecimento
+                para transformar vestígios em informações técnicas. Muito
+                além das séries policiais, trata-se de um trabalho que envolve
+                ciência, documentação, análise crítica e responsabilidade.
+            </p>
+
+            <div class="quote">
+                Evidências não contam histórias sozinhas.
+                São os métodos científicos que ajudam a interpretá-las.
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>
+            <strong>CRIMINALBLOG</strong> — Conteúdo educativo sobre perícia criminal.
+        </p>
+
+        <p>
+            Desenvolvido em HTML + CSS • Projeto acadêmico/educacional
+        </p>
+    </footer>
+
+</body>
 </html>
+
+Como usar no VS Code
+Crie uma pasta chamada criminalblog.
+Dentro dela, crie o arquivo index.html.
+Cole o código acima.
+Salve com Ctrl + S.
+Abra o index.html no navegador.
+
+O site já tem menu fixo, animações de hover, cards, linha do tempo, tabela, seção de casos, curiosidades e estética preta/vermelha de investigação criminal, tudo sem precisar baixar imagens ou bibliotecas externas.
+
+Se quiser, também posso fazer uma versão ainda mais profissional, estilo site de série policial, com tela de investigação, efeito de máquina de escrever, "arquivos confidenciais", animações e uma área de casos em destaque.
