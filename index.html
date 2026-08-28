@@ -1,743 +1,2283 @@
-Claro. Abaixo está um CriminalBlog completo, sem fotos externas, com visual inspirado em investigação criminal, perícia forense, evidências, laboratório e cenas de investigação. Você pode copiar tudo para um arquivo index.html e abrir no VS Code/navegador.
+Claro — abaixo está um CriminalBlog completo em um único arquivo HTML, com visual de investigação forense, animação de entrada, cards interativos, linha do tempo da cadeia de custódia, quiz, área de “revelar fato”, filtro de áreas, modal de fotos, calculadora/mini-simulador de vestígios e espaço preparado para você colocar imagens específicas.
 
+O conteúdo considera referências oficiais brasileiras: a perícia criminal trabalha com exames de locais e instrumentos relacionados a infrações; há áreas como genética, balística, química, informática, papiloscopia, medicina legal e ambiental; e a cadeia de custódia busca garantir a rastreabilidade e confiabilidade dos vestígios. 
+S
+Serviços e Informações do Brasil
++2
+
+HTML completo
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>CriminalBlog | Perícia Criminal</title>
+<title>CRIMINALBLOG | Perícia Criminal</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            scroll-behavior: smooth;
-        }
+<style>
+/* =========================================================
+   CONFIGURAÇÕES GERAIS
+========================================================= */
 
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #0a0a0a;
-            color: #e8e8e8;
-            line-height: 1.6;
-        }
+:root {
+    --bg: #07090c;
+    --bg2: #0d1117;
+    --card: #111820;
+    --card2: #151e27;
+    --red: #e63946;
+    --red-dark: #9d1723;
+    --green: #20c997;
+    --blue: #3da9fc;
+    --yellow: #ffc857;
+    --white: #f4f7f9;
+    --gray: #a8b1ba;
+    --line: rgba(255,255,255,.09);
+    --shadow: 0 20px 60px rgba(0,0,0,.45);
+}
 
-        /* CABEÇALHO */
-        header {
-            min-height: 90vh;
-            background:
-                linear-gradient(rgba(0,0,0,.82), rgba(8,8,8,.95)),
-                radial-gradient(circle at center, #3b0000, #080808 65%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 40px 20px;
-            border-bottom: 3px solid #b30000;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        .badge {
-            border: 1px solid #b30000;
-            color: #ff3b3b;
-            padding: 8px 18px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            font-size: 13px;
-            margin-bottom: 20px;
-        }
+html {
+    scroll-behavior: smooth;
+}
 
-        header h1 {
-            font-size: clamp(45px, 9vw, 90px);
-            color: #fff;
-            letter-spacing: 8px;
-            text-shadow: 0 0 20px #a00000;
-        }
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background:
+        radial-gradient(circle at 10% 10%, rgba(230,57,70,.10), transparent 25%),
+        radial-gradient(circle at 90% 30%, rgba(32,201,151,.06), transparent 25%),
+        var(--bg);
+    color: var(--white);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
 
-        header h1 span {
-            color: #c90000;
-        }
+button {
+    font-family: inherit;
+}
 
-        header p {
-            max-width: 700px;
-            margin: 20px auto;
-            color: #bbb;
-            font-size: 18px;
-        }
+.container {
+    width: min(1150px, 92%);
+    margin: auto;
+}
 
-        .enter {
-            margin-top: 25px;
-            padding: 14px 35px;
-            color: white;
-            background: #9e0000;
-            text-decoration: none;
-            border: 1px solid #d90000;
-            transition: .3s;
-        }
+section {
+    padding: 100px 0;
+}
 
-        .enter:hover {
-            background: #e00000;
-            box-shadow: 0 0 20px #8d0000;
-        }
+.section-title {
+    text-align: center;
+    margin-bottom: 55px;
+}
 
-        /* MENU */
-        nav {
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            background: rgba(8,8,8,.97);
-            border-bottom: 1px solid #333;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
+.section-title span {
+    color: var(--red);
+    font-weight: bold;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-size: .8rem;
+}
 
-        nav a {
-            color: #ccc;
-            text-decoration: none;
-            padding: 18px 20px;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: .3s;
-        }
+.section-title h2 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    margin: 10px 0;
+}
 
-        nav a:hover {
-            color: #ff3333;
-            background: #160000;
-        }
+.section-title p {
+    color: var(--gray);
+    max-width: 700px;
+    margin: auto;
+}
 
-        /* CONTEÚDO */
-        main {
-            max-width: 1150px;
-            margin: auto;
-            padding: 70px 20px;
-        }
 
-        section {
-            margin-bottom: 90px;
-        }
+/* =========================================================
+   TELA DE ENTRADA
+========================================================= */
 
-        .section-title {
-            color: #e00000;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
+#intro {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #030405;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 1s ease;
+}
 
-        h2 {
-            font-size: 38px;
-            margin-bottom: 25px;
-            color: white;
-        }
+#intro.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
 
-        h3 {
-            color: #f1f1f1;
-            margin-bottom: 10px;
-        }
+.scanner {
+    text-align: center;
+}
 
-        .intro {
-            color: #aaa;
-            max-width: 850px;
-            font-size: 17px;
-        }
+.scanner-icon {
+    width: 100px;
+    height: 100px;
+    border: 2px solid var(--red);
+    border-radius: 50%;
+    margin: auto;
+    position: relative;
+    animation: pulse 1.5s infinite;
+}
 
-        /* CARDS */
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
+.scanner-icon::before {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 50%;
+    background: var(--red);
+    left: 50%;
+    top: 0;
+    transform-origin: bottom;
+    animation: scan 1.4s linear infinite;
+}
 
-        .card {
-            background: linear-gradient(145deg, #151515, #0d0d0d);
-            border: 1px solid #292929;
-            padding: 28px;
-            position: relative;
-            transition: .3s;
-        }
+.scanner h1 {
+    margin-top: 25px;
+    font-size: clamp(2rem, 7vw, 5rem);
+    letter-spacing: 10px;
+}
 
-        .card::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 3px;
-            background: #a90000;
-        }
+.scanner p {
+    color: var(--gray);
+    letter-spacing: 4px;
+}
 
-        .card:hover {
-            transform: translateY(-6px);
-            border-color: #800000;
-            box-shadow: 0 10px 30px rgba(120,0,0,.2);
-        }
+.loading {
+    margin: 30px auto 0;
+    width: 260px;
+    height: 4px;
+    background: #1b2025;
+    overflow: hidden;
+}
 
-        .icon {
-            font-size: 35px;
-            margin-bottom: 12px;
-        }
+.loading div {
+    height: 100%;
+    width: 0;
+    background: var(--red);
+    animation: loading 2.2s forwards;
+}
 
-        .card p {
-            color: #999;
-            font-size: 14px;
-        }
+@keyframes loading {
+    to { width: 100%; }
+}
 
-        /* FATOS */
-        .facts {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 30px;
-        }
+@keyframes scan {
+    to { transform: rotate(360deg); }
+}
 
-        .fact {
-            background: #111;
-            border: 1px solid #292929;
-            padding: 25px;
-            text-align: center;
-        }
+@keyframes pulse {
+    50% {
+        box-shadow: 0 0 40px rgba(230,57,70,.4);
+    }
+}
 
-        .fact strong {
-            display: block;
-            color: #d40000;
-            font-size: 35px;
-            margin-bottom: 5px;
-        }
 
-        .fact span {
-            color: #aaa;
-            font-size: 14px;
-        }
+/* =========================================================
+   NAVBAR
+========================================================= */
 
-        /* PROCESSO */
-        .timeline {
-            border-left: 2px solid #850000;
-            margin: 35px 0 0 15px;
-            padding-left: 35px;
-        }
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(7,9,12,.85);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--line);
+}
 
-        .step {
-            position: relative;
-            margin-bottom: 35px;
-        }
+.nav {
+    min-height: 75px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        .step::before {
-            content: "";
-            width: 12px;
-            height: 12px;
-            background: #d00000;
-            border-radius: 50%;
-            position: absolute;
-            left: -42px;
-            top: 6px;
-            box-shadow: 0 0 10px #c00000;
-        }
+.logo {
+    font-weight: 900;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+}
 
-        .step h3 {
-            color: #e00000;
-        }
+.logo span {
+    color: var(--red);
+}
 
-        .step p {
-            color: #999;
-        }
+.nav ul {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+}
 
-        /* CASOS */
-        .case {
-            background: #101010;
-            border: 1px solid #292929;
-            margin: 20px 0;
-            padding: 30px;
-        }
+.nav a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: .9rem;
+    transition: .3s;
+}
 
-        .case-title {
-            color: #d60000;
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
+.nav a:hover {
+    color: var(--red);
+}
 
-        .case p {
-            color: #aaa;
-        }
 
-        .warning {
-            margin-top: 15px;
-            padding: 15px;
-            background: #1b0808;
-            border-left: 3px solid #d00000;
-            color: #c9c9c9;
-            font-size: 13px;
-        }
+/* =========================================================
+   HERO
+========================================================= */
 
-        /* TABELA */
-        .table-container {
-            overflow-x: auto;
-            margin-top: 30px;
-        }
+.hero {
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #111;
-        }
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(rgba(7,9,12,.70), rgba(7,9,12,.95)),
+        url("img/hero-pericia.jpg") center/cover;
+    z-index: -2;
+}
 
-        th, td {
-            padding: 16px;
-            border: 1px solid #292929;
-            text-align: left;
-        }
+.hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 3px,
+            rgba(255,255,255,.015) 4px
+        );
+    z-index: -1;
+}
 
-        th {
-            background: #720000;
-            color: white;
-        }
+.hero-content {
+    max-width: 850px;
+}
 
-        td {
-            color: #aaa;
-        }
+.tag {
+    display: inline-block;
+    padding: 7px 13px;
+    border: 1px solid var(--red);
+    color: var(--red);
+    border-radius: 4px;
+    letter-spacing: 2px;
+    font-size: .75rem;
+    margin-bottom: 20px;
+}
 
-        /* DESTAQUE */
-        .quote {
-            margin: 50px 0;
-            padding: 35px;
-            background:
-                linear-gradient(90deg, #250000, #111);
-            border-left: 5px solid #c90000;
-            font-size: 22px;
-            font-style: italic;
-            color: #ddd;
-        }
+.hero h1 {
+    font-size: clamp(3rem, 8vw, 7rem);
+    line-height: .9;
+    text-transform: uppercase;
+}
 
-        /* RODAPÉ */
-        footer {
-            background: #050505;
-            border-top: 1px solid #292929;
-            text-align: center;
-            padding: 45px 20px;
-            color: #777;
-        }
+.hero h1 span {
+    color: var(--red);
+}
 
-        footer strong {
-            color: #c40000;
-        }
+.hero p {
+    color: #c2c9cf;
+    font-size: 1.1rem;
+    max-width: 700px;
+    margin: 30px 0;
+}
 
-        /* RESPONSIVO */
-        @media (max-width: 600px) {
-            nav a {
-                padding: 12px 8px;
-                font-size: 11px;
-            }
+.btn {
+    border: none;
+    background: var(--red);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: .3s;
+    display: inline-block;
+    text-decoration: none;
+}
 
-            header h1 {
-                letter-spacing: 4px;
-            }
+.btn:hover {
+    background: #ff4757;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(230,57,70,.3);
+}
 
-            h2 {
-                font-size: 30px;
-            }
-        }
-    </style>
+.btn.secondary {
+    background: transparent;
+    border: 1px solid var(--line);
+    margin-left: 10px;
+}
+
+
+/* =========================================================
+   ESTATÍSTICAS
+========================================================= */
+
+.stats {
+    margin-top: -70px;
+    position: relative;
+    z-index: 5;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.stat {
+    background: rgba(17,24,32,.95);
+    border: 1px solid var(--line);
+    padding: 30px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.stat strong {
+    display: block;
+    font-size: 2rem;
+    color: var(--red);
+}
+
+.stat small {
+    color: var(--gray);
+}
+
+
+/* =========================================================
+   SOBRE A PERÍCIA
+========================================================= */
+
+.about {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.about-image {
+    min-height: 500px;
+    border-radius: 12px;
+    background:
+        linear-gradient(135deg, rgba(230,57,70,.2), transparent),
+        url("img/perito-local.jpg") center/cover;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    position: relative;
+}
+
+.image-label {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0,0,0,.8);
+    padding: 10px 15px;
+    border-left: 3px solid var(--red);
+    font-size: .8rem;
+}
+
+.about h2 {
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+}
+
+.about p {
+    color: var(--gray);
+    margin-bottom: 18px;
+}
+
+.highlight {
+    border-left: 3px solid var(--red);
+    background: rgba(230,57,70,.06);
+    padding: 20px;
+    margin-top: 25px;
+}
+
+
+/* =========================================================
+   ÁREAS DE ATUAÇÃO
+========================================================= */
+
+.filter {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 35px;
+}
+
+.filter button {
+    background: var(--card);
+    color: var(--gray);
+    border: 1px solid var(--line);
+    padding: 10px 18px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.filter button:hover,
+.filter button.active {
+    background: var(--red);
+    color: white;
+}
+
+.areas-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.area-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    padding: 30px;
+    border-radius: 10px;
+    transition: .4s;
+    position: relative;
+    overflow: hidden;
+}
+
+.area-card::before {
+    content: "";
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background: var(--red);
+    opacity: .08;
+    border-radius: 50%;
+    right: -30px;
+    top: -30px;
+}
+
+.area-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--red);
+}
+
+.area-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.area-card h3 {
+    margin-bottom: 10px;
+}
+
+.area-card p {
+    color: var(--gray);
+    font-size: .92rem;
+}
+
+
+/* =========================================================
+   CADEIA DE CUSTÓDIA
+========================================================= */
+
+.timeline {
+    position: relative;
+    max-width: 850px;
+    margin: auto;
+}
+
+.timeline::before {
+    content: "";
+    position: absolute;
+    left: 20px;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    background: var(--red);
+}
+
+.timeline-item {
+    padding-left: 65px;
+    margin-bottom: 35px;
+    position: relative;
+}
+
+.timeline-item::before {
+    content: "";
+    position: absolute;
+    left: 11px;
+    top: 7px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 0 5px rgba(230,57,70,.12);
+}
+
+.timeline-item h3 {
+    color: var(--red);
+}
+
+.timeline-item p {
+    color: var(--gray);
+}
+
+
+/* =========================================================
+   FOTOS / GALERIA
+========================================================= */
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.photo {
+    height: 250px;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    background: #151a20;
+    border: 1px solid var(--line);
+    cursor: pointer;
+}
+
+.photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: .5s;
+}
+
+.photo:hover img {
+    transform: scale(1.08);
+}
+
+.photo span {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    background: linear-gradient(transparent, rgba(0,0,0,.9));
+}
+
+
+/* =========================================================
+   FATOS
+========================================================= */
+
+.facts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.fact {
+    background: var(--card);
+    border: 1px solid var(--line);
+    padding: 30px;
+    border-radius: 10px;
+}
+
+.fact-number {
+    color: var(--red);
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.fact p {
+    color: var(--gray);
+}
+
+
+/* =========================================================
+   QUIZ
+========================================================= */
+
+.quiz-box {
+    max-width: 800px;
+    margin: auto;
+    background: var(--card);
+    border: 1px solid var(--line);
+    padding: 40px;
+    border-radius: 12px;
+}
+
+.question {
+    font-size: 1.4rem;
+    margin-bottom: 25px;
+}
+
+.options {
+    display: grid;
+    gap: 12px;
+}
+
+.option {
+    background: var(--card2);
+    border: 1px solid var(--line);
+    padding: 15px;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    text-align: left;
+    transition: .3s;
+}
+
+.option:hover {
+    border-color: var(--red);
+}
+
+.option.correct {
+    background: rgba(32,201,151,.2);
+    border-color: var(--green);
+}
+
+.option.wrong {
+    background: rgba(230,57,70,.2);
+    border-color: var(--red);
+}
+
+#quiz-result {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+
+/* =========================================================
+   SIMULADOR DE VESTÍGIOS
+========================================================= */
+
+.simulator {
+    max-width: 900px;
+    margin: auto;
+    background:
+        linear-gradient(145deg, #111820, #080b0f);
+    padding: 40px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+}
+
+.sim-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 25px 0;
+}
+
+.evidence-btn {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.evidence-btn:hover {
+    border-color: var(--red);
+    color: var(--red);
+}
+
+#evidence-result {
+    min-height: 120px;
+    background: #080b0e;
+    border-left: 3px solid var(--red);
+    padding: 20px;
+    color: var(--gray);
+}
+
+
+/* =========================================================
+   CARREIRA
+========================================================= */
+
+.career {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.career-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    padding: 35px;
+    border-radius: 10px;
+}
+
+.career-card h3 {
+    color: var(--red);
+    margin-bottom: 15px;
+}
+
+.career-card li {
+    color: var(--gray);
+    margin: 8px 0;
+    list-style-position: inside;
+}
+
+
+/* =========================================================
+   FAQ
+========================================================= */
+
+.faq {
+    max-width: 850px;
+    margin: auto;
+}
+
+.faq-item {
+    border-bottom: 1px solid var(--line);
+}
+
+.faq-question {
+    width: 100%;
+    background: none;
+    color: white;
+    border: none;
+    padding: 22px 5px;
+    text-align: left;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: .4s;
+    color: var(--gray);
+}
+
+.faq-item.open .faq-answer {
+    max-height: 300px;
+    padding-bottom: 20px;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.85);
+    z-index: 5000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    max-width: 900px;
+    width: 100%;
+    background: var(--card);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.modal-content img {
+    width: 100%;
+    max-height: 75vh;
+    object-fit: contain;
+}
+
+.close {
+    float: right;
+    font-size: 2rem;
+    cursor: pointer;
+    color: white;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+    border-top: 1px solid var(--line);
+    padding: 50px 0;
+    text-align: center;
+    color: var(--gray);
+}
+
+footer strong {
+    color: var(--red);
+}
+
+
+/* =========================================================
+   RESPONSIVO
+========================================================= */
+
+@media (max-width: 850px) {
+
+    .nav ul {
+        display: none;
+    }
+
+    .stats-grid,
+    .areas-grid,
+    .facts-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .about,
+    .career {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 550px) {
+
+    section {
+        padding: 70px 0;
+    }
+
+    .stats-grid,
+    .areas-grid,
+    .facts-grid,
+    .gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h1 {
+        font-size: 3.3rem;
+    }
+
+    .btn.secondary {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+}
+</style>
 </head>
 
 <body>
 
-    <!-- CAPA -->
-    <header id="inicio">
-        <div class="badge">Arquivo • Investigação • Ciência</div>
+<!-- =====================================================
+     ANIMAÇÃO DE ENTRADA
+===================================================== -->
 
-        <h1>CRIMINAL<span>BLOG</span></h1>
+<div id="intro">
+    <div class="scanner">
+        <div class="scanner-icon"></div>
+        <h1>CRIMINALBLOG</h1>
+        <p>INICIALIZANDO SISTEMA FORENSE...</p>
 
-        <p>
-            Um espaço dedicado à perícia criminal, ciência forense,
-            investigação e às técnicas utilizadas na análise de vestígios.
-        </p>
+        <div class="loading">
+            <div></div>
+        </div>
+    </div>
+</div>
 
-        <a href="#pericia" class="enter">ENTRAR NO ARQUIVO</a>
-    </header>
 
-    <!-- MENU -->
-    <nav>
-        <a href="#pericia">Perícia</a>
-        <a href="#areas">Áreas</a>
-        <a href="#processo">Processo</a>
-        <a href="#casos">Casos</a>
-        <a href="#perfil">Perfil</a>
-        <a href="#curiosidades">Curiosidades</a>
-    </nav>
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
 
-    <main>
+<header>
+    <div class="container nav">
 
-        <!-- INTRODUÇÃO -->
-        <section id="pericia">
-            <div class="section-title">01 // O QUE É?</div>
+        <div class="logo">
+            CRIMINAL<span>BLOG</span>
+        </div>
 
-            <h2>Perícia Criminal</h2>
+        <ul>
+            <li><a href="#inicio">Início</a></li>
+            <li><a href="#pericia">Perícia</a></li>
+            <li><a href="#areas">Áreas</a></li>
+            <li><a href="#cadeia">Cadeia de Custódia</a></li>
+            <li><a href="#quiz">Quiz</a></li>
+        </ul>
 
-            <p class="intro">
-                A perícia criminal é uma área técnico-científica que utiliza
-                métodos e conhecimentos especializados para analisar vestígios
-                relacionados a possíveis crimes. O trabalho pericial busca
-                transformar evidências encontradas em informações que possam
-                contribuir para a investigação e para a Justiça.
+    </div>
+</header>
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<main>
+
+<section class="hero" id="inicio">
+
+    <div class="container">
+
+        <div class="hero-content">
+
+            <span class="tag">ARQUIVO FORENSE // 001</span>
+
+            <h1>
+                A ciência por trás da
+                <span>investigação.</span>
+            </h1>
+
+            <p>
+                Descubra como a perícia criminal transforma
+                vestígios em informação científica e auxilia
+                na reconstrução de acontecimentos investigados.
             </p>
 
-            <div class="quote">
-                "Cada vestígio pode contar uma parte da história.
-                O trabalho da perícia é descobrir o que os vestígios revelam."
+            <a href="#pericia" class="btn">
+                EXPLORAR A PERÍCIA
+            </a>
+
+            <a href="#areas" class="btn secondary">
+                VER ESPECIALIDADES
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     ESTATÍSTICAS
+===================================================== -->
+
+<section class="stats">
+
+    <div class="container">
+
+        <div class="stats-grid">
+
+            <div class="stat">
+                <strong>01</strong>
+                <small>Vestígio pode mudar uma investigação</small>
             </div>
-        </section>
 
-        <!-- ÁREAS -->
-        <section id="areas">
-            <div class="section-title">02 // ESPECIALIZAÇÕES</div>
-
-            <h2>Áreas da Perícia</h2>
-
-            <div class="cards">
-
-                <div class="card">
-                    <div class="icon">🔬</div>
-                    <h3>Biologia Forense</h3>
-                    <p>
-                        Analisa materiais biológicos encontrados em vestígios,
-                        utilizando conhecimentos de biologia e genética.
-                    </p>
-                </div>
-
-                <div class="card">
-                    <div class="icon">🧬</div>
-                    <h3>Genética Forense</h3>
-                    <p>
-                        Trabalha com DNA e outros marcadores genéticos para
-                        auxiliar na identificação de pessoas e comparação de amostras.
-                    </p>
-                </div>
-
-                <div class="card">
-                    <div class="icon">💻</div>
-                    <h3>Computação Forense</h3>
-                    <p>
-                        Investiga dados digitais, dispositivos eletrônicos,
-                        arquivos e outros vestígios relacionados ao ambiente digital.
-                    </p>
-                </div>
-
-                <div class="card">
-                    <div class="icon">🧪</div>
-                    <h3>Química Forense</h3>
-                    <p>
-                        Analisa substâncias e materiais por meio de métodos
-                        laboratoriais e instrumentais.
-                    </p>
-                </div>
-
-                <div class="card">
-                    <div class="icon">🔎</div>
-                    <h3>Local de Crime</h3>
-                    <p>
-                        Examina o ambiente, registra vestígios e documenta
-                        informações importantes encontradas no local.
-                    </p>
-                </div>
-
-                <div class="card">
-                    <div class="icon">🚗</div>
-                    <h3>Perícia em Veículos</h3>
-                    <p>
-                        Pode examinar veículos, componentes e marcas relacionadas
-                        a acidentes ou investigações.
-                    </p>
-                </div>
-
+            <div class="stat">
+                <strong>02</strong>
+                <small>Ciência + metodologia</small>
             </div>
-        </section>
 
-        <!-- FATOS -->
-        <section id="curiosidades">
-            <div class="section-title">03 // VOCÊ SABIA?</div>
+            <div class="stat">
+                <strong>03</strong>
+                <small>Registro e documentação</small>
+            </div>
 
-            <h2>Fatos Sobre a Área</h2>
+            <div class="stat">
+                <strong>∞</strong>
+                <small>Possibilidades de análise</small>
+            </div>
 
-            <div class="facts">
+        </div>
 
-                <div class="fact">
-                    <strong>01</strong>
-                    <span>O trabalho depende de métodos científicos.</span>
-                </div>
+    </div>
 
-                <div class="fact">
-                    <strong>02</strong>
-                    <span>Vestígios precisam ser documentados.</span>
-                </div>
+</section>
 
-                <div class="fact">
-                    <strong>03</strong>
-                    <span>A cadeia de custódia é fundamental.</span>
-                </div>
 
-                <div class="fact">
-                    <strong>04</strong>
-                    <span>Existem diversas especializações.</span>
+<!-- =====================================================
+     SOBRE
+===================================================== -->
+
+<section id="pericia">
+
+    <div class="container">
+
+        <div class="about">
+
+            <!--
+            FOTO PRINCIPAL
+
+            Coloque aqui:
+            img/perito-local.jpg
+
+            Sugestão:
+            foto de um perito trabalhando em um local
+            de exame, laboratório ou documentação.
+            -->
+
+            <div class="about-image">
+
+                <div class="image-label">
+                    FOTO SUGERIDA: PERITO EM LOCAL DE EXAME
                 </div>
 
             </div>
-        </section>
 
-        <!-- PROCESSO -->
-        <section id="processo">
-            <div class="section-title">04 // INVESTIGAÇÃO</div>
 
-            <h2>Como funciona uma perícia?</h2>
+            <div>
 
-            <div class="timeline">
+                <div class="section-title" style="text-align:left;margin-bottom:20px">
 
-                <div class="step">
-                    <h3>01 — Preservação</h3>
-                    <p>
-                        O local deve ser preservado para reduzir o risco de
-                        alteração, perda ou contaminação dos vestígios.
-                    </p>
+                    <span>01 // O QUE É</span>
+
+                    <h2>O que faz a perícia criminal?</h2>
+
                 </div>
-
-                <div class="step">
-                    <h3>02 — Observação</h3>
-                    <p>
-                        O profissional realiza uma análise inicial do ambiente
-                        e identifica possíveis elementos relevantes.
-                    </p>
-                </div>
-
-                <div class="step">
-                    <h3>03 — Documentação</h3>
-                    <p>
-                        Informações importantes são registradas por meio de
-                        descrições, fotografias, medições e outros métodos.
-                    </p>
-                </div>
-
-                <div class="step">
-                    <h3>04 — Coleta</h3>
-                    <p>
-                        Vestígios relevantes podem ser coletados e acondicionados
-                        seguindo procedimentos apropriados.
-                    </p>
-                </div>
-
-                <div class="step">
-                    <h3>05 — Análise</h3>
-                    <p>
-                        O material pode ser encaminhado para exames técnicos
-                        e laboratoriais.
-                    </p>
-                </div>
-
-                <div class="step">
-                    <h3>06 — Laudo</h3>
-                    <p>
-                        Os resultados são organizados em um documento técnico,
-                        apresentando os exames realizados e suas conclusões.
-                    </p>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- CASOS -->
-        <section id="casos">
-            <div class="section-title">05 // CASOS E INVESTIGAÇÕES</div>
-
-            <h2>Onde a perícia pode atuar?</h2>
-
-            <div class="case">
-                <div class="case-title">Caso 01 — Identificação por DNA</div>
 
                 <p>
-                    Em determinadas investigações, vestígios biológicos podem
-                    ser submetidos a exames genéticos. A comparação de perfis
-                    de DNA pode ajudar a estabelecer vínculos ou excluir
-                    determinadas possibilidades.
+                    A perícia criminal utiliza conhecimentos científicos,
+                    técnicos e metodológicos para examinar vestígios
+                    relacionados a fatos investigados.
                 </p>
 
-                <div class="warning">
-                    Exemplo educativo. Um resultado pericial deve ser interpretado
-                    dentro do contexto completo da investigação.
+                <p>
+                    O trabalho pode começar no local de crime e continuar
+                    em laboratórios especializados, onde materiais,
+                    imagens, documentos, substâncias ou outros vestígios
+                    podem ser examinados.
+                </p>
+
+                <div class="highlight">
+
+                    <strong>🔎 PRINCÍPIO FUNDAMENTAL</strong>
+
+                    <p>
+                        O objetivo não é simplesmente "achar um culpado".
+                        A perícia busca produzir informação técnica,
+                        documentada e verificável a partir dos vestígios.
+                    </p>
+
                 </div>
+
             </div>
 
-            <div class="case">
-                <div class="case-title">Caso 02 — Vestígios Digitais</div>
+        </div>
 
-                <p>
-                    Computadores, celulares e outros dispositivos podem conter
-                    informações relevantes para uma investigação. A computação
-                    forense busca preservar e analisar esses dados de maneira
-                    tecnicamente adequada.
-                </p>
-            </div>
+    </div>
 
-            <div class="case">
-                <div class="case-title">Caso 03 — Acidentes e Veículos</div>
+</section>
 
-                <p>
-                    Em ocorrências envolvendo veículos, exames técnicos podem
-                    contribuir para compreender danos, marcas, posições,
-                    condições dos veículos e outros elementos relacionados
-                    ao acontecimento.
-                </p>
-            </div>
-        </section>
 
-        <!-- PERFIL -->
-        <section id="perfil">
-            <div class="section-title">06 // PROFISSÃO</div>
+<!-- =====================================================
+     ÁREAS
+===================================================== -->
 
-            <h2>Características de uma Perita Criminal</h2>
+<section id="areas">
 
-            <p class="intro">
-                A profissão exige uma combinação de conhecimento científico,
-                capacidade de observação, responsabilidade e atenção aos detalhes.
+    <div class="container">
+
+        <div class="section-title">
+
+            <span>02 // ESPECIALIDADES</span>
+
+            <h2>Áreas da Perícia Criminal</h2>
+
+            <p>
+                A criminalística reúne profissionais de diferentes
+                formações e especialidades.
             </p>
 
-            <div class="cards">
+        </div>
 
-                <div class="card">
-                    <h3>🧠 Raciocínio Analítico</h3>
-                    <p>
-                        Capacidade de interpretar informações e relacionar
-                        diferentes elementos de uma investigação.
-                    </p>
-                </div>
 
-                <div class="card">
-                    <h3>🔎 Atenção aos Detalhes</h3>
-                    <p>
-                        Pequenos vestígios podem ter importância na reconstrução
-                        de acontecimentos.
-                    </p>
-                </div>
+        <div class="filter">
 
-                <div class="card">
-                    <h3>⚖️ Imparcialidade</h3>
-                    <p>
-                        O trabalho técnico deve buscar resultados baseados
-                        nos vestígios e nos métodos científicos.
-                    </p>
-                </div>
+            <button class="active" onclick="filterAreas('all', this)">
+                Todas
+            </button>
 
-                <div class="card">
-                    <h3>📋 Organização</h3>
-                    <p>
-                        Registros detalhados e procedimentos padronizados
-                        são importantes para a qualidade do trabalho.
-                    </p>
-                </div>
+            <button onclick="filterAreas('biologica', this)">
+                Biológicas
+            </button>
 
-                <div class="card">
-                    <h3>🧪 Conhecimento Científico</h3>
-                    <p>
-                        Diferentes áreas da ciência podem ser aplicadas
-                        durante exames periciais.
-                    </p>
-                </div>
+            <button onclick="filterAreas('tecnica', this)">
+                Técnicas
+            </button>
 
-                <div class="card">
-                    <h3>🔐 Responsabilidade</h3>
-                    <p>
-                        Evidências precisam ser tratadas com cuidado,
-                        respeitando procedimentos técnicos e legais.
-                    </p>
-                </div>
+            <button onclick="filterAreas('digital', this)">
+                Digital
+            </button>
 
-            </div>
-        </section>
+        </div>
 
-        <!-- FORMAÇÃO -->
-        <section>
-            <div class="section-title">07 // FORMAÇÃO</div>
 
-            <h2>O que estudar?</h2>
+        <div class="areas-grid">
 
-            <div class="table-container">
 
-                <table>
-                    <tr>
-                        <th>Área</th>
-                        <th>Conhecimentos relacionados</th>
-                    </tr>
+            <article class="area-card" data-category="tecnica">
 
-                    <tr>
-                        <td>Biologia</td>
-                        <td>Biologia molecular, genética e análise de materiais biológicos.</td>
-                    </tr>
+                <div class="area-icon">🔫</div>
 
-                    <tr>
-                        <td>Química</td>
-                        <td>Química analítica, substâncias e métodos laboratoriais.</td>
-                    </tr>
+                <h3>Balística Forense</h3>
 
-                    <tr>
-                        <td>Computação</td>
-                        <td>Sistemas, dados, redes e análise de dispositivos digitais.</td>
-                    </tr>
+                <p>
+                    Estudo técnico relacionado a armas de fogo,
+                    projéteis, estojos, impactos e outros elementos
+                    associados a ocorrências com disparos.
+                </p>
 
-                    <tr>
-                        <td>Física</td>
-                        <td>Movimento, energia, balística e princípios de medição.</td>
-                    </tr>
+            </article>
 
-                    <tr>
-                        <td>Direito</td>
-                        <td>Procedimentos, legislação e aspectos relacionados à prova.</td>
-                    </tr>
-                </table>
 
-            </div>
-        </section>
+            <article class="area-card" data-category="biologica">
 
-        <!-- CONCLUSÃO -->
-        <section>
-            <div class="section-title">08 // ARQUIVO FINAL</div>
+                <div class="area-icon">🧬</div>
 
-            <h2>Ciência por trás da investigação</h2>
+                <h3>Genética Forense</h3>
 
-            <p class="intro">
-                A perícia criminal reúne diferentes áreas do conhecimento
-                para transformar vestígios em informações técnicas. Muito
-                além das séries policiais, trata-se de um trabalho que envolve
-                ciência, documentação, análise crítica e responsabilidade.
+                <p>
+                    Utiliza conhecimentos de genética para examinar
+                    vestígios biológicos e auxiliar processos de
+                    identificação e comparação.
+                </p>
+
+            </article>
+
+
+            <article class="area-card" data-category="digital">
+
+                <div class="area-icon">💻</div>
+
+                <h3>Informática Forense</h3>
+
+                <p>
+                    Examina dispositivos, sistemas e dados digitais
+                    relevantes para investigações, utilizando métodos
+                    apropriados de preservação e análise.
+                </p>
+
+            </article>
+
+
+            <article class="area-card" data-category="tecnica">
+
+                <div class="area-icon">🧪</div>
+
+                <h3>Química Forense</h3>
+
+                <p>
+                    Análise de substâncias e materiais utilizando
+                    métodos químicos e instrumentais.
+                </p>
+
+            </article>
+
+
+            <article class="area-card" data-category="biologica">
+
+                <div class="area-icon">🧫</div>
+
+                <h3>Toxicologia Forense</h3>
+
+                <p>
+                    Investiga a presença e os efeitos de substâncias
+                    químicas ou tóxicas em materiais biológicos.
+                </p>
+
+            </article>
+
+
+            <article class="area-card" data-category="tecnica">
+
+                <div class="area-icon">🖐️</div>
+
+                <h3>Papiloscopia</h3>
+
+                <p>
+                    Trabalha com impressões papilares e técnicas
+                    de identificação humana.
+                </p>
+
+            </article>
+
+
+            <article class="area-card" data-category="biologica">
+
+                <div class="area-icon">⚕️</div>
+
+                <h3>Medicina Legal</h3>
+
+                <p>
+                    Campo relacionado à aplicação do conhecimento
+                    médico às questões de interesse da Justiça.
+                </p>
+
+            </article>
+
+
+            <article class="area-card" data-category="tecnica">
+
+                <div class="area-icon">📷</div>
+
+                <h3>Local de Crime</h3>
+
+                <p>
+                    Envolve documentação, observação, registro,
+                    interpretação e coleta técnica de vestígios
+                    encontrados no local examinado.
+                </p>
+
+            </article>
+
+
+            <article class="area-card" data-category="tecnica">
+
+                <div class="area-icon">🌳</div>
+
+                <h3>Perícia Ambiental</h3>
+
+                <p>
+                    Examina questões relacionadas a danos ambientais,
+                    recursos naturais e outros fatos de interesse
+                    pericial.
+                </p>
+
+            </article>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CADEIA DE CUSTÓDIA
+===================================================== -->
+
+<section id="cadeia">
+
+    <div class="container">
+
+        <div class="section-title">
+
+            <span>03 // EVIDÊNCIA</span>
+
+            <h2>Cadeia de Custódia</h2>
+
+            <p>
+                O caminho do vestígio precisa ser documentado.
             </p>
 
-            <div class="quote">
-                Evidências não contam histórias sozinhas.
-                São os métodos científicos que ajudam a interpretá-las.
+        </div>
+
+
+        <div class="timeline">
+
+
+            <div class="timeline-item">
+
+                <h3>01 — Reconhecimento</h3>
+
+                <p>
+                    Identificação de um elemento que pode possuir
+                    interesse para a produção da prova pericial.
+                </p>
+
             </div>
-        </section>
 
-    </main>
 
-    <footer>
+            <div class="timeline-item">
+
+                <h3>02 — Isolamento</h3>
+
+                <p>
+                    Preservação do ambiente e prevenção de alterações
+                    ou contaminações dos vestígios.
+                </p>
+
+            </div>
+
+
+            <div class="timeline-item">
+
+                <h3>03 — Fixação</h3>
+
+                <p>
+                    Registro detalhado da posição e características
+                    do vestígio, podendo envolver fotografias,
+                    filmagens e croquis.
+                </p>
+
+            </div>
+
+
+            <div class="timeline-item">
+
+                <h3>04 — Coleta</h3>
+
+                <p>
+                    Recolhimento técnico do vestígio que será
+                    encaminhado para análise.
+                </p>
+
+            </div>
+
+
+            <div class="timeline-item">
+
+                <h3>05 — Acondicionamento</h3>
+
+                <p>
+                    Embalagem adequada de acordo com a natureza
+                    e características do material.
+                </p>
+
+            </div>
+
+
+            <div class="timeline-item">
+
+                <h3>06 — Transporte e processamento</h3>
+
+                <p>
+                    O vestígio continua sendo registrado e rastreado
+                    durante as etapas posteriores de análise.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     GALERIA
+===================================================== -->
+
+<section>
+
+    <div class="container">
+
+        <div class="section-title">
+
+            <span>04 // ARQUIVO VISUAL</span>
+
+            <h2>Galeria Forense</h2>
+
+            <p>
+                Espaços preparados para você inserir fotografias
+                específicas relacionadas ao tema.
+            </p>
+
+        </div>
+
+
+        <div class="gallery">
+
+
+            <!-- FOTO 1 -->
+            <div class="photo"
+                 onclick="openModal('img/local-crime.jpg')">
+
+                <img
+                    src="img/local-crime.jpg"
+                    alt="Local de exame pericial">
+
+                <span>
+                    📷 Local de exame
+                </span>
+
+            </div>
+
+
+            <!-- FOTO 2 -->
+            <div class="photo"
+                 onclick="openModal('img/laboratorio-forense.jpg')">
+
+                <img
+                    src="img/laboratorio-forense.jpg"
+                    alt="Laboratório forense">
+
+                <span>
+                    🧪 Laboratório forense
+                </span>
+
+            </div>
+
+
+            <!-- FOTO 3 -->
+            <div class="photo"
+                 onclick="openModal('img/dna-forense.jpg')">
+
+                <img
+                    src="img/dna-forense.jpg"
+                    alt="Análise genética">
+
+                <span>
+                    🧬 Genética forense
+                </span>
+
+            </div>
+
+
+            <!-- FOTO 4 -->
+            <div class="photo"
+                 onclick="openModal('img/papiloscopia.jpg')">
+
+                <img
+                    src="img/papiloscopia.jpg"
+                    alt="Papiloscopia">
+
+                <span>
+                    🖐️ Papiloscopia
+                </span>
+
+            </div>
+
+
+            <!-- FOTO 5 -->
+            <div class="photo"
+                 onclick="openModal('img/informatica-forense.jpg')">
+
+                <img
+                    src="img/informatica-forense.jpg"
+                    alt="Informática forense">
+
+                <span>
+                    💻 Informática forense
+                </span>
+
+            </div>
+
+
+            <!-- FOTO 6 -->
+            <div class="photo"
+                 onclick="openModal('img/balistica.jpg')">
+
+                <img
+                    src="img/balistica.jpg"
+                    alt="Balística forense">
+
+                <span>
+                    🔬 Balística forense
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FATOS
+===================================================== -->
+
+<section>
+
+    <div class="container">
+
+        <div class="section-title">
+
+            <span>05 // VOCÊ SABIA?</span>
+
+            <h2>Fatos sobre Perícia</h2>
+
+        </div>
+
+
+        <div class="facts-grid">
+
+
+            <div class="fact">
+
+                <div class="fact-number">01</div>
+
+                <h3>O vestígio pode ser invisível</h3>
+
+                <p>
+                    Alguns vestígios não são perceptíveis a olho nu
+                    e podem exigir equipamentos, reagentes ou
+                    técnicas específicas para sua análise.
+                </p>
+
+            </div>
+
+
+            <div class="fact">
+
+                <div class="fact-number">02</div>
+
+                <h3>Fotografia é documentação</h3>
+
+                <p>
+                    A documentação fotográfica pode fazer parte
+                    da fixação e registro de um vestígio.
+                </p>
+
+            </div>
+
+
+            <div class="fact">
+
+                <div class="fact-number">03</div>
+
+                <h3>A ciência é multidisciplinar</h3>
+
+                <p>
+                    A perícia pode envolver conhecimentos de
+                    química, biologia, física, computação,
+                    engenharia, medicina e outras áreas.
+                </p>
+
+            </div>
+
+
+            <div class="fact">
+
+                <div class="fact-number">04</div>
+
+                <h3>Existe documentação técnica</h3>
+
+                <p>
+                    O laudo pericial é um dos principais produtos
+                    do trabalho técnico-científico.
+                </p>
+
+            </div>
+
+
+            <div class="fact">
+
+                <div class="fact-number">05</div>
+
+                <h3>Preservação importa</h3>
+
+                <p>
+                    A preservação adequada do local é importante
+                    para reduzir alterações e contaminações.
+                </p>
+
+            </div>
+
+
+            <div class="fact">
+
+                <div class="fact-number">06</div>
+
+                <h3>Nem toda perícia acontece no local</h3>
+
+                <p>
+                    Muitos exames são realizados posteriormente
+                    em laboratórios ou ambientes especializados.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     SIMULADOR
+===================================================== -->
+
+<section>
+
+    <div class="container">
+
+        <div class="section-title">
+
+            <span>06 // INTERAÇÃO</span>
+
+            <h2>Identifique o tipo de vestígio</h2>
+
+            <p>
+                Clique em um elemento para descobrir quais
+                áreas podem estar relacionadas à sua análise.
+            </p>
+
+        </div>
+
+
+        <div class="simulator">
+
+            <h3>🔎 CENTRAL DE ANÁLISE</h3>
+
+            <div class="sim-buttons">
+
+                <button class="evidence-btn"
+                    onclick="showEvidence('digital')">
+                    💾 Celular
+                </button>
+
+                <button class="evidence-btn"
+                    onclick="showEvidence('biologico')">
+                    🧬 Material biológico
+                </button>
+
+                <button class="evidence-btn"
+                    onclick="showEvidence('papilar')">
+                    🖐️ Impressão
+                </button>
+
+                <button class="evidence-btn"
+                    onclick="showEvidence('quimico')">
+                    🧪 Substância
+                </button>
+
+                <button class="evidence-btn"
+                    onclick="showEvidence('arma')">
+                    🔫 Elementos balísticos
+                </button>
+
+                <button class="evidence-btn"
+                    onclick="showEvidence('documento')">
+                    📄 Documento
+                </button>
+
+            </div>
+
+
+            <div id="evidence-result">
+                Selecione um tipo de vestígio acima.
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CARREIRA
+===================================================== -->
+
+<section>
+
+    <div class="container">
+
+        <div class="section-title">
+
+            <span>07 // PROFISSÃO</span>
+
+            <h2>Como é trabalhar na área?</h2>
+
+            <p>
+                A perícia criminal pode envolver trabalho de campo,
+                laboratório, análise de dados e elaboração de documentos.
+            </p>
+
+        </div>
+
+
+        <div class="career">
+
+
+            <div class="career-card">
+
+                <h3>🎓 Formação</h3>
+
+                <ul>
+                    <li>As exigências dependem do cargo e órgão.</li>
+                    <li>Há oportunidades vinculadas a diferentes formações.</li>
+                    <li>Concursos podem definir áreas específicas.</li>
+                    <li>Especializações podem complementar a formação.</li>
+                </ul>
+
+            </div>
+
+
+            <div class="career-card">
+
+                <h3>🧠 Habilidades importantes</h3>
+
+                <ul>
+                    <li>Atenção aos detalhes.</li>
+                    <li>Raciocínio lógico.</li>
+                    <li>Conhecimento científico.</li>
+                    <li>Capacidade de documentação.</li>
+                    <li>Imparcialidade e rigor metodológico.</li>
+                </ul>
+
+            </div>
+
+
+            <div class="career-card">
+
+                <h3>🔬 Ambientes de trabalho</h3>
+
+                <ul>
+                    <li>Locais de exame.</li>
+                    <li>Laboratórios.</li>
+                    <li>Institutos de criminalística.</li>
+                    <li>Unidades técnico-científicas.</li>
+                    <li>Ambientes de análise digital.</li>
+                </ul>
+
+            </div>
+
+
+            <div class="career-card">
+
+                <h3>📑 Produtos do trabalho</h3>
+
+                <ul>
+                    <li>Registros técnicos.</li>
+                    <li>Fotografias e documentação.</li>
+                    <li>Resultados de exames.</li>
+                    <li>Laudos periciais.</li>
+                    <li>Informações técnico-científicas.</li>
+                </ul>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     QUIZ
+===================================================== -->
+
+<section id="quiz">
+
+    <div class="container">
+
+        <div class="section-title">
+
+            <span>08 // DESAFIO</span>
+
+            <h2>Quiz Criminalístico</h2>
+
+            <p>
+                Teste seus conhecimentos.
+            </p>
+
+        </div>
+
+
+        <div class="quiz-box">
+
+            <div class="question">
+                Qual etapa da cadeia de custódia envolve
+                a descrição detalhada e documentação do vestígio?
+            </div>
+
+
+            <div class="options">
+
+                <button class="option"
+                    onclick="answerQuiz(this, false)">
+                    Transporte
+                </button>
+
+                <button class="option"
+                    onclick="answerQuiz(this, true)">
+                    Fixação
+                </button>
+
+                <button class="option"
+                    onclick="answerQuiz(this, false)">
+                    Acondicionamento
+                </button>
+
+                <button class="option"
+                    onclick="answerQuiz(this, false)">
+                    Processamento
+                </button>
+
+            </div>
+
+
+            <div id="quiz-result"></div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FAQ
+===================================================== -->
+
+<section>
+
+    <div class="container">
+
+        <div class="section-title">
+
+            <span>09 // DÚVIDAS</span>
+
+            <h2>Perguntas frequentes</h2>
+
+        </div>
+
+
+        <div class="faq">
+
+
+            <div class="faq-item">
+
+                <button class="faq-question">
+                    O perito é investigador?
+                    <span>+</span>
+                </button>
+
+                <div class="faq-answer">
+                    <p>
+                        A perícia possui função técnico-científica.
+                        O perito examina vestígios e produz informações
+                        técnicas que podem auxiliar a investigação e
+                        o processo judicial.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="faq-item">
+
+                <button class="faq-question">
+                    Todo perito trabalha em laboratório?
+                    <span>+</span>
+                </button>
+
+                <div class="faq-answer">
+                    <p>
+                        Não. Dependendo da especialidade e do cargo,
+                        o profissional pode atuar em locais de exame,
+                        laboratórios, ambientes digitais ou outras
+                        unidades técnico-científicas.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="faq-item">
+
+                <button class="faq-question">
+                    O que é um vestígio?
+                    <span>+</span>
+                </button>
+
+                <div class="faq-answer">
+                    <p>
+                        Em termos legais, vestígio é o objeto ou material,
+                        visível ou latente, relacionado à infração penal.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="faq-item">
+
+                <button class="faq-question">
+                    A perícia sempre identifica o autor?
+                    <span>+</span>
+                </button>
+
+                <div class="faq-answer">
+                    <p>
+                        Não necessariamente. O exame pericial pode responder
+                        perguntas técnicas sobre vestígios, circunstâncias
+                        e relações entre elementos. A conclusão depende
+                        do conjunto de informações disponível.
+                    </p>
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</main>
+
+
+<!-- =====================================================
+     MODAL DAS FOTOS
+===================================================== -->
+
+<div class="modal" id="imageModal">
+
+    <div class="modal-content">
+
+        <span class="close" onclick="closeModal()">
+            &times;
+        </span>
+
+        <img id="modalImage" src="" alt="Imagem ampliada">
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    <div class="container">
+
+        <strong>CRIMINALBLOG</strong>
+
         <p>
-            <strong>CRIMINALBLOG</strong> — Conteúdo educativo sobre perícia criminal.
+            Ciência • Vestígios • Criminalística • Investigação
         </p>
 
         <p>
-            Desenvolvido em HTML + CSS • Projeto acadêmico/educacional
+            Conteúdo educacional sobre perícia criminal.
         </p>
-    </footer>
+
+    </div>
+
+</footer>
+
+
+<script>
+
+/* =========================================================
+   ENTRADA DO SITE
+========================================================= */
+
+window.addEventListener("load", function() {
+
+    setTimeout(function() {
+
+        document
+            .getElementById("intro")
+            .classList.add("hidden");
+
+    }, 2500);
+
+});
+
+
+/* =========================================================
+   FILTRO DAS ÁREAS
+========================================================= */
+
+function filterAreas(category, button) {
+
+    const cards = document.querySelectorAll(".area-card");
+
+    const buttons = document.querySelectorAll(".filter button");
+
+    buttons.forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    cards.forEach(card => {
+
+        if (
+            category === "all" ||
+            card.dataset.category === category
+        ) {
+
+            card.style.display = "block";
+
+        } else {
+
+            card.style.display = "none";
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   SIMULADOR DE VESTÍGIOS
+========================================================= */
+
+function showEvidence(type) {
+
+    const result =
+        document.getElementById("evidence-result");
+
+    const data = {
+
+        digital: `
+            <h3>💾 Vestígio digital</h3>
+            <p>
+                Pode estar relacionado à informática forense.
+                Dependendo do caso, podem existir dados em
+                computadores, celulares, mídias ou sistemas.
+            </p>
+        `,
+
+        biologico: `
+            <h3>🧬 Vestígio biológico</h3>
+            <p>
+                Pode ser analisado por áreas como genética
+                ou outras especialidades biomédicas, conforme
+                a natureza do material e o exame necessário.
+            </p>
+        `,
+
+        papilar: `
+            <h3>🖐️ Vestígio papilar</h3>
+            <p>
+                Pode ser objeto de exame papiloscópico,
+                utilizando técnicas de identificação e comparação.
+            </p>
+        `,
+
+        quimico: `
+            <h3>🧪 Substância</h3>
+            <p>
+                Pode demandar química ou toxicologia forense,
+                dependendo da natureza do material e da questão
+                pericial.
+            </p>
+        `,
+
+        arma: `
+            <h3>🔫 Elementos balísticos</h3>
+            <p>
+                Podem ser examinados por especialistas em
+                balística forense, considerando o material
+                disponível e os quesitos do exame.
+            </p>
+        `,
+
+        documento: `
+            <h3>📄 Documento</h3>
+            <p>
+                Documentos podem ser submetidos a exames
+                especializados para verificar características
+                relevantes à investigação.
+            </p>
+        `
+
+    };
+
+    result.innerHTML = data[type];
+
+}
+
+
+/* =========================================================
+   QUIZ
+========================================================= */
+
+function answerQuiz(button, correct) {
+
+    const options =
+        document.querySelectorAll(".option");
+
+    options.forEach(option => {
+
+        option.disabled = true;
+
+    });
+
+
+    if (correct) {
+
+        button.classList.add("correct");
+
+        document.getElementById("quiz-result").innerHTML =
+            "✅ Correto! A fixação registra detalhadamente o vestígio e sua posição.";
+
+    } else {
+
+        button.classList.add("wrong");
+
+        document.getElementById("quiz-result").innerHTML =
+            "❌ Não é essa. A resposta correta é FIXAÇÃO.";
+
+    }
+
+}
+
+
+/* =========================================================
+   FAQ
+========================================================= */
+
+document
+    .querySelectorAll(".faq-question")
+    .forEach(button => {
+
+        button.addEventListener("click", function() {
+
+            const item =
+                this.parentElement;
+
+            item.classList.toggle("open");
+
+            const symbol =
+                this.querySelector("span");
+
+            symbol.textContent =
+                item.classList.contains("open")
+                    ? "−"
+                    : "+";
+
+        });
+
+    });
+
+
+/* =========================================================
+   MODAL DAS FOTOS
+========================================================= */
+
+function openModal(image) {
+
+    const modal =
+        document.getElementById("imageModal");
+
+    const modalImage =
+        document.getElementById("modalImage");
+
+    modalImage.src = image;
+
+    modal.classList.add("active");
+
+}
+
+
+function closeModal() {
+
+    document
+        .getElementById("imageModal")
+        .classList.remove("active");
+
+}
+
+
+document
+    .getElementById("imageModal")
+    .addEventListener("click", function(event) {
+
+        if (event.target === this) {
+            closeModal();
+        }
+
+    });
+
+
+/* =========================================================
+   EFEITO DE REVELAÇÃO AO ROLAR
+========================================================= */
+
+const observer =
+    new IntersectionObserver(
+        entries => {
+
+            entries.forEach(entry => {
+
+                if (entry.isIntersecting) {
+
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+
+                }
+
+            });
+
+        },
+        {
+            threshold: .12
+        }
+    );
+
+
+document
+    .querySelectorAll(
+        ".area-card, .fact, .career-card, .timeline-item, .photo"
+    )
+    .forEach(element => {
+
+        element.style.opacity = "0";
+
+        element.style.transform =
+            "translateY(25px)";
+
+        element.style.transition =
+            "opacity .7s ease, transform .7s ease";
+
+        observer.observe(element);
+
+    });
+
+</script>
 
 </body>
 </html>
 
-Como usar no VS Code
-Crie uma pasta chamada criminalblog.
-Dentro dela, crie o arquivo index.html.
-Cole o código acima.
-Salve com Ctrl + S.
-Abra o index.html no navegador.
+📁 Estrutura das fotos
 
-O site já tem menu fixo, animações de hover, cards, linha do tempo, tabela, seção de casos, curiosidades e estética preta/vermelha de investigação criminal, tudo sem precisar baixar imagens ou bibliotecas externas.
+Para o código funcionar com as imagens, crie esta estrutura:
 
-Se quiser, também posso fazer uma versão ainda mais profissional, estilo site de série policial, com tela de investigação, efeito de máquina de escrever, "arquivos confidenciais", animações e uma área de casos em destaque.
+criminalblog/
+│
+├── index.html
+│
+└── img/
+    ├── hero-pericia.jpg
+    ├── perito-local.jpg
+    ├── local-crime.jpg
+    ├── laboratorio-forense.jpg
+    ├── dna-forense.jpg
+    ├── papiloscopia.jpg
+    ├── informatica-forense.jpg
+    └── balistica.jpg
+
+
+Assim você consegue trocar as imagens simplesmente colocando suas fotos dentro da pasta img.
+
+As áreas incluídas no site são baseadas em especialidades que aparecem em materiais oficiais de perícia criminal, incluindo local de crime, genética forense, informática forense, toxicologia, química, balística, papiloscopia, medicina legal e perícia ambiental. 
+S
+Serviços e Informações do Brasil
++1
+
+Também coloquei a cadeia de custódia como uma interação visual, porque a legislação brasileira descreve etapas como reconhecimento, isolamento, fixação, coleta e acondicionamento, entre outras. 
+P
+Presidência da República
++1
+
+E há uma base real para a variedade de formações: a própria Polícia Federal lista diferentes áreas de formação para ingresso como Perito Criminal Federal, incluindo computação, química, biologia, medicina, odontologia, farmácia, física, engenharias e outras. 
+S
+Serviços e Informações do Brasil
+
+O resultado é um site bem mais parecido com um portal/arquivo forense do que com uma página escolar simples, e você pode abrir o index.html diretamente no navegador.
+
+S
+P
+Fontes
